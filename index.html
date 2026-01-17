@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculadora de conversión de unidades de longitud: kilómetros, hectómetros, decámetros, metros, decímetros, centímetros y milímetros">
+    <title>Calculadora de Conversión de Unidades</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔢 Calculadora de Conversión</h1>
+            <p class="subtitle">Convierte entre diferentes unidades de longitud</p>
+        </header>
+        
+        <main class="converter">
+            <div class="input-group">
+                <label for="inputValue">Valor a convertir</label>
+                <div class="input-wrapper">
+                    <button type="button" class="btn-decrement" aria-label="Decrementar valor">−</button>
+                    <input 
+                        type="number" 
+                        id="inputValue" 
+                        placeholder="Ej: 100" 
+                        step="any"
+                        aria-label="Valor numérico a convertir"
+                    >
+                    <button type="button" class="btn-increment" aria-label="Incrementar valor">+</button>
+                </div>
+            </div>
+            
+            <div class="units-container">
+                <div class="unit-group">
+                    <label for="inputUnit">De:</label>
+                    <select id="inputUnit" aria-label="Unidad de origen">
+                        <option value="km">Kilómetros (km)</option>
+                        <option value="hm">Hectómetros (hm)</option>
+                        <option value="dam">Decámetros (dam)</option>
+                        <option value="m">Metros (m)</option>
+                        <option value="dm">Decímetros (dm)</option>
+                        <option value="cm">Centímetros (cm)</option>
+                        <option value="mm">Milímetros (mm)</option>
+                    </select>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="unit-group">
+                    <label for="outputUnit">A:</label>
+                    <select id="outputUnit" aria-label="Unidad de destino">
+                        <option value="km">Kilómetros (km)</option>
+                        <option value="hm">Hectómetros (hm)</option>
+                        <option value="dam">Decámetros (dam)</option>
+                        <option value="m" selected>Metros (m)</option>
+                        <option value="dm">Decímetros (dm)</option>
+                        <option value="cm">Centímetros (cm)</option>
+                        <option value="mm">Milímetros (mm)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button id="convertButton" aria-label="Convertir unidades">
+                <span>Convertir</span>
+            </button>
+            
+            <div id="result" class="result" role="status" aria-live="polite">
+                <div class="result-content">
+                    <p class="result-label">Resultado:</p>
+                    <p id="outputValue" class="result-value">Ingresa un valor para convertir</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p class="info">💡 La conversión se realiza automáticamente mientras escribes</p>
+        </footer>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>
