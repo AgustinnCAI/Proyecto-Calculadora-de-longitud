@@ -25,6 +25,9 @@ const botonConvertir = document.getElementById('convertButton');
 const valorSalida = document.getElementById('outputValue');
 const botonIncrementar = document.querySelector('.btn-increment');
 const botonDecrementar = document.querySelector('.btn-decrement');
+const botonIntercambiar = document.querySelector('.btn-swap');
+const botonCopiar = document.querySelector('.btn-copy');
+const resultadoDiv = document.getElementById('result');
 
 function formatearNumero(numero) {
     if (Math.abs(numero) >= 1e9 || (Math.abs(numero) < 1e-6 && numero !== 0)) {
@@ -47,27 +50,95 @@ function convertir() {
     if (isNaN(valor) || valorEntrada.value === '') {
         valorSalida.textContent = 'Ingresa un valor para convertir';
         valorSalida.style.color = '#666';
+        resultadoDiv.classList.remove('animate');
         return;
     }
 
     if (valor < 0) {
         valorSalida.textContent = 'Por favor, introduce un valor positivo.';
         valorSalida.style.color = '#c62828';
+        resultadoDiv.classList.remove('animate');
+        return;
+    }
+
+    if (valor > 1e15) {
+        valorSalida.textContent = 'El valor es demasiado grande para convertir.';
+        valorSalida.style.color = '#c62828';
+        resultadoDiv.classList.remove('animate');
         return;
     }
 
     if (unidadOrigen === unidadDestino) {
         valorSalida.textContent = `${formatearNumero(valor)} ${nombresUnidades[unidadDestino]}`;
         valorSalida.style.color = '#333';
+        animarResultado();
         return;
     }
 
     const valorEnMetros = valor * factoresConversion[unidadOrigen];
     const resultado = valorEnMetros / factoresConversion[unidadDestino];
 
+    if (!isFinite(resultado)) {
+        valorSalida.textContent = 'Error en el cálculo. Verifica el valor.';
+        valorSalida.style.color = '#c62828';
+        resultadoDiv.classList.remove('animate');
+        return;
+    }
+
     const resultadoFormateado = formatearNumero(resultado);
     valorSalida.textContent = `${resultadoFormateado} ${nombresUnidades[unidadDestino]}`;
     valorSalida.style.color = '#333';
+    animarResultado();
+}
+
+function animarResultado() {
+    resultadoDiv.classList.remove('animate');
+    setTimeout(() => {
+        resultadoDiv.classList.add('animate');
+    }, 10);
+}
+
+function intercambiarUnidades() {
+    const unidadOrigenTemp = unidadEntrada.value;
+    unidadEntrada.value = unidadSalida.value;
+    unidadSalida.value = unidadOrigenTemp;
+    convertir();
+}
+
+function copiarResultado() {
+    const textoResultado = valorSalida.textContent;
+    
+    if (textoResultado === 'Ingresa un valor para convertir' || 
+        textoResultado.includes('Por favor') || 
+        textoResultado.includes('demasiado grande') ||
+        textoResultado.includes('Error')) {
+        return;
+    }
+
+    navigator.clipboard.writeText(textoResultado).then(() => {
+        botonCopiar.textContent = '✓';
+        botonCopiar.classList.add('copied');
+        
+        setTimeout(() => {
+            botonCopiar.textContent = '📋';
+            botonCopiar.classList.remove('copied');
+        }, 2000);
+    }).catch(() => {
+        const textarea = document.createElement('textarea');
+        textarea.value = textoResultado;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        
+        botonCopiar.textContent = '✓';
+        botonCopiar.classList.add('copied');
+        
+        setTimeout(() => {
+            botonCopiar.textContent = '📋';
+            botonCopiar.classList.remove('copied');
+        }, 2000);
+    });
 }
 
 botonConvertir.addEventListener('click', convertir);
@@ -114,6 +185,9 @@ botonDecrementar.addEventListener('click', function() {
         convertir();
     }
 });
+
+botonIntercambiar.addEventListener('click', intercambiarUnidades);
+botonCopiar.addEventListener('click', copiarResultado);
 
 window.addEventListener('DOMContentLoaded', function() {
     valorEntrada.focus();
